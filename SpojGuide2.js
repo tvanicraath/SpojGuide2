@@ -115,7 +115,7 @@ $(document).ready(function() {
     
     
     $("h2").each(function(){
-		var pname = $(this).text().split(" ")[2];
+                var pname = $(this).text().split("-")[0].trim();
         if($(this).text()=="SPOJ Problem Set (classical)")   return;
         
         //alert(pname);
@@ -133,10 +133,10 @@ $(document).ready(function() {
         method: "GET",
         url: "https://www.spoj.com/myaccount/",
         onload: function(response){
-			$("table[width='91%']:first > tbody > tr > td > a[href*='/status/']", response.responseText).each(function(){
+                        $("table:first > tbody > tr > td > a[href*='/status/']", response.responseText).each(function(){
 				var p = $(this).text();
 				if(p in problems) {
-					$(problems[p]).css("text-decoration","line-through");
+                                        $(problems[p])[0].style.textDecoration="line-through";
 				}
 			});
 		}
@@ -144,7 +144,7 @@ $(document).ready(function() {
 	
 	GM_xmlhttpRequest({
         method: "POST",
-        url: "http://home.iitk.ac.in/~nimavat/spoj/get.php",
+        url: "http://home.iitk.ac.in/~sshekh/spoj/get.php",
 		headers: { "Content-type" : "application/x-www-form-urlencoded" },
 		data: encodeURI("problems="+problems_string),
         onload: function(responseDetails) {
@@ -160,11 +160,13 @@ $(document).ready(function() {
 					continue;
 				var u = a[1];
 				$(problems[p]).attr("title", u + " ACs");
-				$(problems[p]).css("background-color", chooseColor(u));
+                                $(problems[p])[0].style.backgroundColor="#"+ chooseColor(u);
                 
               
                    //alert(window.location.pathname.split("/")[1]);
-                 if(window.location.pathname.split("/")[1] != "users")   {
+                 if(window.location.pathname.split("/")[1] != "users" && window.location.pathname.split("/")[1] !="myaccount")   {
+                     var x=document.getElementById('problem-name');
+                    x.style.backgroundColor="#"+ chooseColor(u);
                      point=Math.round(8000.0/(41.0+parseInt(u)))/100;
                     $(problems[p]).text($(problems[p]).text() + "  ("+u+"ACs  "+point+"points) \n\n" );
                     $('<br /><br>').insertBefore(problems[p])
